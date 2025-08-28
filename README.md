@@ -216,9 +216,7 @@ Pairwise Accuracy (PA)
 
 Measures the proportion of correctly ordered pairs:
 
-$$
-PA = \frac{2}{n(n-1)} \sum_{i<j} \mathbf{1}\big[(r_i < r_j) \land (\hat{r}_i < \hat{r}_j)\big]
-$$
+![PA](https://math.vercel.app/?from=PA%20=%20\frac{1}{\tfrac{1}{2}n(n-1)}%20\sum_{i<j}\mathbf{1}\big[(r_i%20<%20r_j)%20\land%20(\hat{r}_i%20<%20\hat{r}_j)\big])
 
 
 
