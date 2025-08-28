@@ -180,38 +180,28 @@ RL-based approach where a policy is learned over nodes, edges, and modes.
 
 ---
 
-### Model Validation
+## Model Validation  
 
-We validate models by reordering a pre-ranked (Pareto-based) set of routes and comparing with the reference order.
+We validate models by reordering a pre-ranked (Pareto-based) set of routes and comparing with the reference order.  
 
-Metrics:
+Metrics:  
 
-* **Kendall’s Tau (τ):**
+- **Kendall’s Tau (τ):**  
+  ![tau](https://latex.codecogs.com/svg.latex?\tau=\frac{C-D}{\tfrac{1}{2}n(n-1)})  
+  Measures pairwise concordance (+1 = perfect, -1 = reversed).  
 
-  $$
-  \tau = \frac{C - D}{\tfrac{1}{2}n(n-1)}
-  $$
+- **Spearman’s ρ:**  
+  ![rho](https://latex.codecogs.com/svg.latex?\rho=1-\frac{6\sum{d_i^2}}{n(n^2-1)})  
+  Rank correlation (monotonic relationship).  
 
-* **Spearman’s ρ:**
+- **Pairwise Accuracy (PA):**  
+  ![pa](https://latex.codecogs.com/svg.latex?\text{PA}=\frac{1}{\tfrac{1}{2}n(n-1)}\sum_{i<j}\mathbf{1}[(r_i<r_j)\land(\hat{r}_i<\hat{r}_j)])  
+  Proportion of pairs ordered correctly.  
 
-  $$
-  \rho = 1 - \frac{6 \sum d_i^2}{n(n^2 - 1)}
-  $$
+- **NDCG (Normalized Discounted Cumulative Gain):**  
+  ![ndcg](https://latex.codecogs.com/svg.latex?\text{DCG}_k=\sum_{i=1}^k\frac{2^{rel_i}-1}{\log_2(i+1)},\quad\text{NDCG}_k=\frac{\text{DCG}_k}{\text{IDCG}_k})  
+  Evaluates ranking quality, prioritizing top results.  
 
-* **Pairwise Accuracy (PA):**
-
-  $$
-  PA = \frac{1}{\tfrac{1}{2}n(n-1)} \sum_{i<j} \mathbf{1}[(r_i<r_j) \land (\hat r_i < \hat r_j)]
-  $$
-
-* **NDCG:**
-
-  $$
-  DCG_k = \sum_{i=1}^k \frac{2^{rel_i}-1}{\log_2(i+1)}, \quad
-  NDCG_k = \frac{DCG_k}{IDCG_k}
-  $$
-
----
 
 ## Contributors
 
