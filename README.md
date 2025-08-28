@@ -79,7 +79,7 @@ RouteRecommendor/
 3. Install dependencies:  
 ```
    pip install -r requirements.txt
-```
+````
 
 ---
 
@@ -180,28 +180,69 @@ RL-based approach where a policy is learned over nodes, edges, and modes.
 
 ---
 
-## Model Validation  
+### Model Validation
 
-We validate models by reordering a pre-ranked (Pareto-based) set of routes and comparing with the reference order.  
+We validate models by reordering a pre-ranked (Pareto-based) set of routes and comparing with the reference order.
 
-Metrics:  
 
-- **Kendall’s Tau (τ):**  
-  ![tau](https://latex.codecogs.com/svg.latex?\tau=\frac{C-D}{\tfrac{1}{2}n(n-1)})  
-  Measures pairwise concordance (+1 = perfect, -1 = reversed).  
+Metrics:
 
-- **Spearman’s ρ:**  
-  ![rho](https://latex.codecogs.com/svg.latex?\rho=1-\frac{6\sum{d_i^2}}{n(n^2-1)})  
-  Rank correlation (monotonic relationship).  
+Kendall’s Tau (τ)
 
-- **Pairwise Accuracy (PA):**  
-  ![pa](https://latex.codecogs.com/svg.latex?\text{PA}=\frac{1}{\tfrac{1}{2}n(n-1)}\sum_{i<j}\mathbf{1}[(r_i<r_j)\land(\hat{r}_i<\hat{r}_j)])  
-  Proportion of pairs ordered correctly.  
+Measures the correlation between two ranked lists by comparing concordant and discordant pairs:
 
-- **NDCG (Normalized Discounted Cumulative Gain):**  
-  ![ndcg](https://latex.codecogs.com/svg.latex?\text{DCG}_k=\sum_{i=1}^k\frac{2^{rel_i}-1}{\log_2(i+1)},\quad\text{NDCG}_k=\frac{\text{DCG}_k}{\text{IDCG}_k})  
-  Evaluates ranking quality, prioritizing top results.  
+$$
+\tau = \frac{C - D}{\tfrac{1}{2}n(n-1)}
+$$
 
+Where:
+- $C$ = number of concordant pairs (same order in both rankings)
+- $D$ = number of discordant pairs (different order in both rankings)
+- $n$ = number of items
+
+Spearman's ρ
+
+Measures rank correlation using the squared differences between ranks:
+
+$$
+\rho = 1 - \frac{6 \sum d_i^2}{n(n^2 - 1)}
+$$
+
+Where:
+- $d_i$ = difference between ranks for each item
+- $n$ = number of items
+
+Pairwise Accuracy (PA)
+
+Measures the proportion of correctly ordered pairs:
+
+$$
+PA = \frac{1}{\tfrac{1}{2}n(n-1)} \sum_{i<j} \mathbf{1}[(r_i<r_j) \land (\hat r_i < \hat r_j)]
+$$
+
+Where:
+- $r_i$ = true rank of item $i$
+- $\hat r_i$ = predicted rank of item $i$
+- $\mathbf{1}[\cdot]$ = indicator function (1 if condition true, 0 otherwise)
+
+## Normalized Discounted Cumulative Gain (NDCG)
+
+Measures ranking quality with emphasis on top results:
+
+$$
+DCG_k = \sum_{i=1}^k \frac{2^{rel_i}-1}{\log_2(i+1)}
+$$
+
+$$
+NDCG_k = \frac{DCG_k}{IDCG_k}
+$$
+
+Where:
+- $rel_i$ = relevance score of item at position $i$
+- $k$ = number of items to consider
+- $IDCG_k$ = ideal DCG (best possible ranking)
+
+---
 
 ## Contributors
 
