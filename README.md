@@ -217,7 +217,7 @@ Pairwise Accuracy (PA)
 Measures the proportion of correctly ordered pairs:
 
 $$
-PA = \sum_{i<j}
+PA = \sum_{i<j} 2^i*j
 $$
 
 Where:
