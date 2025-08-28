@@ -1,248 +1,226 @@
-# RouteRecommendor
+# RouteRecommendor  
 
-An intelligent route recommendation system that promotes active mobility (e.g., walking, cycling) by integrating geospatial, weather, and transport data.
+An intelligent route recommendation system that promotes active mobility (walking, cycling, etc.) by integrating geospatial, weather, and transport data.  
 
-## Table of Contents
+## Table of Contents  
 
--   [Features](#features)
-    
--   [Tech Stack](#tech-stack)
-    
--   [Project Structure](#project-structure)
-    
--   [Getting Started](#getting-started)
-    
--   [Usage](#usage)
-    
-    -   [Graph Creation](#graph-creation)
-        
-    -   [Routes Dataset Generation](#routes-dataset-generation)
-        
-    -   [Prediction](#prediction)
-        
-    -   [RL](#rl)
-        
--   [Explanation and Theory](#explanation-and-theory)
+- [Features](#features)  
+- [Tech Stack](#tech-stack)  
+- [Project Structure](#project-structure)  
+- [Getting Started](#getting-started)  
+- [Usage](#usage)  
+  - [Graph Creation](#graph-creation)  
+  - [Routes Dataset Generation](#routes-dataset-generation)  
+  - [Prediction](#prediction)  
+  - [PPO](#ppo)  
+  - [DQN](#dqn)  
+  - [Testing](#testing)  
+- [Explanation and Theory](#explanation-and-theory)  
+  - [Goal](#goal)  
+  - [Prediction (GCN+GRU)](#prediction-gcn-gru)  
+  - [PPO and DQN](#ppo-and-dqn)  
+  - [Model Validation](#model-validation)  
+- [Contributors](#contributors)  
+- [License](#license)  
 
-	- [Goal](#goal)
-	
-	- [prcess](#process)
-	
--   [Contributors](#contributors)
-    
--   [License](#license)
-    
+---
 
-## Features
+## Features  
 
--   Multi-criteria route planning
-    
--   Graph-based modeling of urban transport
-    
--   AI-based recommendation engine
-    
--   Context-aware (weather, elevation, air quality)
-    
+- Multi-criteria route planning  
+- Graph-based modeling of urban transport  
+- AI-powered recommendation engine  
+- Context-aware (weather, elevation, air quality)  
 
-## Tech Stack
+---
 
--   Python
-    
--   NetworkX / PyTorch Geometric
-    
--   OpenStreetMap, OpenWeatherMap, Data.gouv
-    
--   GIS tools (e.g., Geopy)
-    
+## Tech Stack  
 
-## Project Structure
+- Python  
+- NetworkX / PyTorch Geometric  
+- OpenStreetMap, OpenWeatherMap, Data.gouv  
+- GIS tools (Geopy, etc.)  
 
-```
-RouteRecommendor/  
-├── data/                         # Contains raw data  
-├── logs/                         # Contains training metrics and graphs for all models
-├── models/                       # Trained models  
-├── modules/                      # Secondary or rarely run scripts  
-│   ├── classes.ipynb             # Classes for containing and loading data  
-│   ├── constants.ipynb           # Global constants  
-│   ├── data_cleaner.ipynb        # Processes the raw data  
-│   ├── environment.ipynb       # RL environment  
-│   ├── functions.ipynb           # Modular helper functions  
-│   ├── prediction_model.ipynb    # Main prediction model  
-│   ├── routes_dataset_generator.ipynb  # Generates synthetic routes
-│   ├── DQN.ipynb                 # DQN model
-│   ├── tester.ipynb              # contains functions to test the models' validity  
-│   └── scoring_model.ipynb       # PPO model
-├── outputs/                      # Preprocessed data, graphs, embeddings, etc.  
-├── graph_processor.ipynb         # Runs the AI models  
-├── graph.ipynb                   # Builds the graph from collected data  
-├── requirements.txt  
-└── README.md  
+---
+
+## Project Structure  
 
 ```
 
-## Getting Started
+RouteRecommendor/
+├── data/                         # Raw data
+├── logs/                         # Training metrics and graphs
+├── models/                       # Trained models
+├── modules/                      # Utility scripts and notebooks
+│   ├── classes.ipynb             # Data container classes
+│   ├── constants.ipynb           # Global constants
+│   ├── data\_cleaner.ipynb        # Data preprocessing
+│   ├── environment.ipynb         # RL environment
+│   ├── functions.ipynb           # Helper functions
+│   ├── prediction\_model.ipynb    # Prediction model
+│   ├── routes\_dataset\_generator.ipynb  # Synthetic route generator
+│   ├── DQN.ipynb                 # DDQN implementation
+│   ├── scoring\_model.ipynb       # PPO implementation
+│   └── tester.ipynb              # Validation utilities
+├── outputs/                      # Preprocessed data, embeddings, etc.
+├── graph\_processor.ipynb         # Main pipeline (graph + models)
+├── graph.ipynb                   # Graph creation
+├── requirements.txt
+└── README.md
 
-1.  Clone the repo
-    
-2.  Set up a virtual environment
-    
-3.  Install dependencies:
-    
-    ```
-    pip install -r requirements.txt
-    ```
-    
+````
+
+---
+
+## Getting Started  
+
+1. Clone the repo  
+2. Create a virtual environment  
+3. Install dependencies:  
+   ```bash
+   pip install -r requirements.txt
+````
+
+---
 
 ## Usage
 
--   Make sure to change the **absolute paths** at the beginning of some notebooks and save them.
-    
--   **Relative paths** are already used within the code, so you don’t need to modify those.
-    
--   You’ll mostly use `graph_processor.ipynb`. If you want to generate new routes, you can run `modules/routes_dataset_generator.ipynb` or `graph.ipynb` to rebuild the graph. if you want to start from the very raw data you can run `modules/data_cleaner.ipynb`
-    
--   You can also adjust parameters in `constants.ipynb`.
-    
+* Update **absolute paths** at the top of some notebooks if needed (relative paths already work).
+* The main entry point is `graph_processor.ipynb`.
+* For route generation: run `modules/routes_dataset_generator.ipynb`.
+* For graph creation: run `graph.ipynb`.
+* Parameters can be tweaked in `modules/constants.ipynb`.
 
 ### Graph Creation
 
-Run `graph.ipynb` — this will create three files:
+Run `graph.ipynb`. It outputs:
 
--   `outputs/graph_nx.json`: basic Strasbourg graph
-    
--   `outputs/graph_looped_nx.json`: same graph with self-loops (dummy edges added)
-    
--   `outputs/graph_mapping.json`: maps edge IDs from the first graph to the looped version (the looped graph is used for prediction, so we need to track the original edges)
-    
+* `outputs/graph_nx.json` – base graph of Strasbourg
+* `outputs/graph_looped_nx.json` – graph with self-loops (used for prediction)
+* `outputs/graph_mapping.json` – maps edge IDs between graphs
 
-**Do not run the weather cells** — weather is treated as contextual, not static graph data. It also requires a Mistral key, which has limited free usage. But if you insist on doing so, please add your API token in `modules/contants.ipynb`
+⚠️ Weather data is contextual (not static). Avoid running those cells unless you provide your API token in `modules/constants.ipynb`.
 
 ### Routes Dataset Generation
 
-Run `modules/routes_dataset_generator.ipynb` — this will generate two files:
+Run `modules/routes_dataset_generator.ipynb`. It outputs:
 
--   `raw_routes.json`: unlabeled routes (used as input for scoring)
-    
--   `routes_dict.json`: labeled version of `raw_routes.json` (adds CO₂, time, distance, weighted inclination, etc.)
-    
+* `raw_routes.json` – unlabeled random routes
+* `routes_dict.json` – labeled routes with CO₂, time, distance, inclination, etc.
 
-You can customize:
+You can configure:
 
--   The number of random starting points (end of 2nd cell under "generate routes")
-    
--   The number of routes per point (end of 3rd cell under "generate routes")
-    
+* Number of random starting points
+* Number of routes per origin
 
 ### Prediction
 
-Run `graph_processor.ipynb` 
-After training, you'll get `route_predictor.pth`.  
-You can then run the **test** section to get prediction scores for each label.
-
+Run `graph_processor.ipynb`.
+This trains the prediction model (`route_predictor.pth`) and evaluates prediction errors.
 
 ### PPO
 
-Run `graph_processor.ipynb` there is a ppo part that will return a trained model as well as a graph showing the training metrics
+Implemented in `graph_processor.ipynb` (PPO section). Produces a trained policy and reward plots.
 
 ### DQN
-same as PPO
 
-### TESTING
-for ppo and dqn just load a model and an environnement and run test_model from `tester.ipynb`
-for the prediction model since it does not take the same inputs and outputs testing is a bit harder, there is a seperate section at the end of `graph_processor.ipynb` that does just that 
+Implemented similarly to PPO. Trains a DDQN policy and logs rewards.
 
+### Testing
+
+* PPO & DQN → use `tester.ipynb` with a trained model and environment.
+* Prediction model → tested in the last section of `graph_processor.ipynb`.
+
+---
 
 ## Explanation and Theory
 
 ### Goal
 
-The goal is to **score routes**. Given `n` routes, the model ranks them from best to worst.
+Score and rank multiple routes from **best** to **worst** under multiple criteria.
 
-### prediction (GCN + GRU)
+---
 
-To do this, we first predict the main parameters we’ll use to compute the score. Currently, we predict:
+### Prediction (GCN+GRU)
+
+We predict key route attributes:
 
 ```
 [co2e, distance, danger, time, traffic, light, ppl_density, freq, inclination]
 ```
 
-Given a weight vector:
+Given weights:
 
 $$
-[W_{co2e}, W_{distance}, W_{danger}, W_{time}, W_{traffic}, W_{light}, W_{ppl-density}, W_{freq}, W_{inclination}]
+[W_{co2e}, W_{distance}, W_{danger}, W_{time}, W_{traffic}, W_{light}, W_{ppl}, W_{freq}, W_{inclination}]
 $$
 
-The score is computed as:
+Score is computed as:
 
 $$
-score= \sum (W_X \cdot X)
+\text{Score} = \sum (W_x \cdot x)
 $$
 
-### Process
+**Pipeline:**
 
-1.  The model starts with GTFS and GBFS files to build the base graph.
-    
-2.  It enriches the graph using APIs and other available resources.
-    
-3.  It needs a `raw_routes` dataset. See `outputs/raw_routes.json` for the expected format.  
-    Currently, these routes are generated randomly.
-    
-4.  The script labels those routes, creating training/testing data for the prediction model.
- 
+1. Build graph from GTFS + GBFS.
+2. Enrich with APIs (weather, traffic, etc.).
+3. Generate synthetic `raw_routes`.
+4. Label routes → training/testing dataset.
 
-### PPO (and DQN)  
-  A different implemented approach is **RL-based planning**, where a policy is learned and the score of a route corresponds to its probability under that policy.
+---
 
- In this approach, the model takes node, edge and mode embeddings (extracted from the first model). it also takes a labeled graph containing data like co2e, time ,distance etc. (check graph_nx.json for more details). It will then proceed to explore the graph and learn tradeoffs between the different objectives (time vs co2e emission for example). both ppo and DQN models are implemented in this way
- 
- the rewards, mebeddings and possible actions are all handled by the environment. check `modules/environment.ipynb` for detail
+### PPO and DQN
 
+RL-based approach where a policy is learned over nodes, edges, and modes.
 
-### Model Validation  
+* Inputs: embeddings + labeled graph (CO₂, time, distance, etc.).
+* Outputs: a ranked set of routes, balancing trade-offs (e.g., time vs CO₂).
+* Rewards, embeddings, and actions handled in `environment.ipynb`.
 
-We validate our models by reordering a pre-ranked set of routes and comparing the predicted order to the reference order.  
-The following metrics are used:  
+---
 
-- **Kendall’s Tau (τ):**  
+### Model Validation
+
+We validate models by reordering a pre-ranked (Pareto-based) set of routes and comparing with the reference order.
+
+Metrics:
+
+* **Kendall’s Tau (τ):**
 
   $$
   \tau = \frac{C - D}{\tfrac{1}{2}n(n-1)}
-  $$ 
+  $$
 
-  Measures concordance of pairs (+1 = perfect, -1 = reversed).  
-
-- **Spearman’s ρ:**  
+* **Spearman’s ρ:**
 
   $$
   \rho = 1 - \frac{6 \sum d_i^2}{n(n^2 - 1)}
-  $$  
-  Rank correlation (monotonic relationship).  
+  $$
 
-- **Pairwise Accuracy (PA):**  
+* **Pairwise Accuracy (PA):**
 
   $$
-  \text{PA} = \frac{1}{\tfrac{1}{2}n(n-1)} \sum_{i < j} \mathbf{1}[ (r_i < r_j) \land (\hat{r}_i < \hat{r}_j) ]
-  $$  
-  Proportion of pairs ordered correctly.  
+  PA = \frac{1}{\tfrac{1}{2}n(n-1)} \sum_{i<j} \mathbf{1}[(r_i<r_j) \land (\hat r_i < \hat r_j)]
+  $$
 
-- **NDCG (Normalized Discounted Cumulative Gain):**
+* **NDCG:**
 
   $$
-  \text{DCG}_k = \sum_{i=1}^k \frac{2^{rel_i} - 1}{\log_2(i+1)}, 
-  \quad
-  \text{NDCG}_k = \frac{\text{DCG}_k}{\text{IDCG}_k}
-  $$  
-  Evaluates ranking quality, prioritizing top results.  
+  DCG_k = \sum_{i=1}^k \frac{2^{rel_i}-1}{\log_2(i+1)}, \quad
+  NDCG_k = \frac{DCG_k}{IDCG_k}
+  $$
 
+---
 
 ## Contributors
 
--   Ghalmane Zakariya (supervisor)
-    
--   Lassioued Badis (intern)
-    
+* **Zakariya Ghalmane** (Supervisor)
+* **Badis Lassioued** (Intern)
+
+---
 
 ## License
 
 MIT License
+
