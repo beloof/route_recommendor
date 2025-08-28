@@ -205,24 +205,29 @@ We validate our models by reordering a pre-ranked set of routes and comparing th
 The following metrics are used:  
 
 - **Kendall’s Tau (τ):**  
+
   $$
   \tau = \frac{C - D}{\tfrac{1}{2}n(n-1)}
   $$ 
+
   Measures concordance of pairs (+1 = perfect, -1 = reversed).  
 
 - **Spearman’s ρ:**  
+
   $$
   \rho = 1 - \frac{6 \sum d_i^2}{n(n^2 - 1)}
   $$  
   Rank correlation (monotonic relationship).  
 
 - **Pairwise Accuracy (PA):**  
+
   $$
   \text{PA} = \frac{1}{\tfrac{1}{2}n(n-1)} \sum_{i < j} \mathbf{1}[ (r_i < r_j) \land (\hat{r}_i < \hat{r}_j) ]
   $$  
   Proportion of pairs ordered correctly.  
 
-- **NDCG (Normalized Discounted Cumulative Gain):**  
+- **NDCG (Normalized Discounted Cumulative Gain):**
+
   $$
   \text{DCG}_k = \sum_{i=1}^k \frac{2^{rel_i} - 1}{\log_2(i+1)}, 
   \quad
