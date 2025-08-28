@@ -216,7 +216,7 @@ Pairwise Accuracy (PA)
 
 Measures the proportion of correctly ordered pairs:
 
-$$\left( \sum_{i<j}^n \mathbf{1}[(r_i < r_j) \land (\hat r_i < \hat r_j)] \right)^2 \leq \left( \sum_{k=1}^n a_k^2 \right) \left( \sum_{k=1}^n b_k^2 \right)$$
+$$\left( \sum_{i<j}^n 1 \right)^2 \leq \left( \sum_{k=1}^n a_k^2 \right) \left( \sum_{k=1}^n b_k^2 \right)$$
 
 Where:
 - $r_i$ = true rank of item $i$
