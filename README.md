@@ -91,6 +91,8 @@ RouteRecommendor/
 * For graph creation: run `graph.ipynb`.
 * Parameters can be tweaked in `modules/constants.ipynb`.
 
+---
+
 ### Graph Creation
 
 Run `graph.ipynb`. It outputs:
@@ -100,6 +102,8 @@ Run `graph.ipynb`. It outputs:
 * `outputs/graph_mapping.json` – maps edge IDs between graphs
 
 ⚠️ Weather data is contextual (not static). Avoid running those cells unless you provide your API token in `modules/constants.ipynb`.
+
+---
 
 ### Routes Dataset Generation
 
@@ -112,20 +116,23 @@ You can configure:
 
 * Number of random starting points
 * Number of routes per origin
-
+---
 ### Prediction
 
 Run `graph_processor.ipynb`.
 This trains the prediction model (`route_predictor.pth`) and evaluates prediction errors.
 
+---
 ### PPO
 
 Implemented in `graph_processor.ipynb` (PPO section). Produces a trained policy and reward plots.
 
+---
 ### DQN
 
 Implemented similarly to PPO. Trains a DDQN policy and logs rewards.
 
+---
 ### Testing
 
 * PPO & DQN → use `tester.ipynb` with a trained model and environment.
