@@ -217,8 +217,9 @@ Pairwise Accuracy (PA)
 Measures the proportion of correctly ordered pairs:
 
 $$
-PA = \frac{1}{\tfrac{1}{2}n(n-1)} \sum_{i<j} \mathbf{1}\big[(r_i < r_j) \land (\hat{r}_i < \hat{r}_j)\big]
+PA = \frac{2}{n(n-1)} \sum_{i<j} \mathbf{1}\big[(r_i < r_j) \land (\hat{r}_i < \hat{r}_j)\big]
 $$
+
 
 
 Where:
