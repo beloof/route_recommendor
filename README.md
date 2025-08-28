@@ -66,7 +66,7 @@ RouteRecommendor/
 │   ├── classes.ipynb             # Classes for containing and loading data  
 │   ├── constants.ipynb           # Global constants  
 │   ├── data_cleaner.ipynb        # Processes the raw data  
-│   ├── environnement.ipynb       # RL environment  
+│   ├── environment.ipynb       # RL environment  
 │   ├── functions.ipynb           # Modular helper functions  
 │   ├── prediction_model.ipynb    # Main prediction model  
 │   ├── routes_dataset_generator.ipynb  # Generates synthetic routes
@@ -195,6 +195,8 @@ $$
   A different implemented approach is **RL-based planning**, where a policy is learned and the score of a route corresponds to its probability under that policy.
 
  In this approach, the model takes node, edge and mode embeddings (extracted from the first model). it also takes a labeled graph containing data like co2e, time ,distance etc. (check graph_nx.json for more details). It will then proceed to explore the graph and learn tradeoffs between the different objectives (time vs co2e emission for example). both ppo and DQN models are implemented in this way
+ 
+ the rewards, mebeddings and possible actions are all handled by the environment. check `modules/environment.ipynb` for detail
 
 
 ### Model Validation  
@@ -203,29 +205,29 @@ We validate our models by reordering a pre-ranked set of routes and comparing th
 The following metrics are used:  
 
 - **Kendall’s Tau (τ):**  
-  \[
+  $$
   \tau = \frac{C - D}{\tfrac{1}{2}n(n-1)}
-  \]  
+  $$ 
   Measures concordance of pairs (+1 = perfect, -1 = reversed).  
 
 - **Spearman’s ρ:**  
-  \[
+  $$
   \rho = 1 - \frac{6 \sum d_i^2}{n(n^2 - 1)}
-  \]  
+  $$  
   Rank correlation (monotonic relationship).  
 
 - **Pairwise Accuracy (PA):**  
-  \[
+  $$
   \text{PA} = \frac{1}{\tfrac{1}{2}n(n-1)} \sum_{i < j} \mathbf{1}[ (r_i < r_j) \land (\hat{r}_i < \hat{r}_j) ]
-  \]  
+  $$  
   Proportion of pairs ordered correctly.  
 
 - **NDCG (Normalized Discounted Cumulative Gain):**  
-  \[
+  $$
   \text{DCG}_k = \sum_{i=1}^k \frac{2^{rel_i} - 1}{\log_2(i+1)}, 
   \quad
   \text{NDCG}_k = \frac{\text{DCG}_k}{\text{IDCG}_k}
-  \]  
+  $$  
   Evaluates ranking quality, prioritizing top results.  
 
 
