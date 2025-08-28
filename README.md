@@ -187,7 +187,7 @@ We validate models by reordering a pre-ranked (Pareto-based) set of routes and c
 
 Metrics:
 
-Kendall’s Tau (τ)
+## Kendall’s Tau (τ)
 
 Measures the correlation between two ranked lists by comparing concordant and discordant pairs:
 
@@ -200,7 +200,7 @@ Where:
 - $D$ = number of discordant pairs (different order in both rankings)
 - $n$ = number of items
 
-Spearman's ρ
+## Spearman's ρ
 
 Measures rank correlation using the squared differences between ranks:
 
@@ -212,7 +212,7 @@ Where:
 - $d_i$ = difference between ranks for each item
 - $n$ = number of items
 
-Pairwise Accuracy (PA)
+## Pairwise Accuracy (PA)
 
 Measures the proportion of correctly ordered pairs:
 
